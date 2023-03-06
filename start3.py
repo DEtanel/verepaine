@@ -19,7 +19,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
         # Open files for visual showing in QTableWidget
-        with open('date_1.txt', 'r') as f1, open('sys_1.txt', 'r') as f2, open('dia_1.txt', 'r') as f3, open('pulse_1.txt','r') as f4, open('weather_pressure_1.txt','r') as f5:
+        with open('date.txt', 'r') as f1, open('sys.txt', 'r') as f2, open('dia.txt', 'r') as f3, open('pulse.txt','r') as f4, open('weather_pressure.txt','r') as f5:
             data1 = f1.readlines()
             data2 = f2.readlines()
             data3 = f3.readlines()
@@ -73,12 +73,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def push_Save_clicked(self):
+        owm =pyowm.OWM('f8c43bbd601d39c177afabec2d050d04')
+        mgr = owm.weather_manager()
+        weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure  # 'weather', not 'observation'
+        pressure_value=weather_pressure['press']
         sys_value = self.textEdit.text()
         dia_value = self.textEdit_2.text()
         pulse_value = self.textEdit_3.text()
         data_value = self.textEdit_4.text() 
     
-        
 
         with open('sys.txt', 'a') as sysfile:
             sysfile.write(str(sys_value) + '\n')
@@ -162,8 +165,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 
-
-
         rowCount = self.tableWidget.rowCount()
         self.tableWidget.insertRow(rowCount)
         self.tableWidget.setItem(rowCount, 0, QTableWidgetItem(data_value))
@@ -187,9 +188,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # for row in range(self.tableWidget.rowCount()):
         #     if row in selectedRows:
         #         x.append(row)
-        #         y1.append(float(self.tableWidget.item(row, 0).text()))
-        #         y2.append(float(self.tableWidget.item(row, 1).text()))
-        #         y3.append(float(self.tableWidget.item(row, 2).text()))
+        #         y1.append(self.tableWidget.item(row, 0).text())
+        #         y2.append(self.tableWidget.item(row, 1).text())
+        #         y3.append(self.tableWidget.item(row, 2).text())
         
         # plt.plot(x, y1, label='SYS')
         # plt.plot(x, y2, label='DIA')
@@ -208,10 +209,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 # def weather_pressure(self):                                     # OpenWeatherMap ilmapainetietoa hakeminen
-owm =pyowm.OWM('f8c43bbd601d39c177afabec2d050d04')
-mgr = owm.weather_manager()
-weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure  # 'weather', not 'observation'
-pressure_value=weather_pressure['press']
+# owm =pyowm.OWM('f8c43bbd601d39c177afabec2d050d04')
+# mgr = owm.weather_manager()
+# weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure  # 'weather', not 'observation'
+# pressure_value=weather_pressure['press']
 
 
 
