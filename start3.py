@@ -75,8 +75,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def push_Save_clicked(self):
         owm =pyowm.OWM('f8c43bbd601d39c177afabec2d050d04')
         mgr = owm.weather_manager()
-        weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure  # 'weather', not 'observation'
+        weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure
         pressure_value=weather_pressure['press']
+        
         sys_value = self.textEdit.text()
         dia_value = self.textEdit_2.text()
         pulse_value = self.textEdit_3.text()
@@ -108,7 +109,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             print('Weather pressure data tallennettu')
             pressdatafile.close()
 
-        # COVERTER
+
+
+        # Array converter for reverse data showing in QTableWidget
         array = list()
         with open("date.txt", 'r') as date:
             for line in date:
@@ -162,7 +165,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             wpr_1.write(array[i]+'\n')
         wpr_1.close
         array.clear()
-
+        # End converter
 
 
         rowCount = self.tableWidget.rowCount()
