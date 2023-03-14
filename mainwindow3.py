@@ -96,4 +96,4 @@ class Ui_MainWindow(object):
         self.label_6.setText(_translate("MainWindow", "Visual data"))
         self.pushButton_3.setText(_translate("MainWindow", "Settings"))
         self.pushButton_4.setText(_translate("MainWindow", "Quit"))
-        self.pushButton_5.setText(_translate("MainWindow", "Don`t press this button!"))
+        self.pushButton_5.setText(_translate("MainWindow", "Reserved"))

@@ -3,9 +3,9 @@ from PyQt5.QtWidgets import QDialog, QApplication, QTableWidgetItem, QMainWindow
 from PyQt5.QtCore import QCoreApplication
 from mainwindow3 import Ui_MainWindow
 import sys
+import csv
 import pyowm
-# import matplotlib.pyplot as plt
-
+import matplotlib.pyplot as plt
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -18,7 +18,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_4.clicked.connect(QCoreApplication.instance().quit)
 
       
-
         # Open files for visual showing in QTableWidget
         with open('date.txt', 'r') as f1, open('sys.txt', 'r') as f2, open('dia.txt', 'r') as f3, open('pulse.txt','r') as f4, open('weather_pressure.txt','r') as f5:
             data1 = f1.readlines()
@@ -71,15 +70,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.tableWidget.setItem(row, 4, item5)
 
 
-
     def push_Save_clicked(self):
         sys_value = self.textEdit.text()
         dia_value = self.textEdit_2.text()
         pulse_value = self.textEdit_3.text()
         data_value = self.textEdit_4.text() 
     
-        
-
         with open('sys.txt', 'a') as sysfile:
             sysfile.write(str(sys_value) + '\n')
             print('Sys-tieto tallennettu')
@@ -104,7 +100,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             pressdatafile.write(str(pressure_value) + '\n')
             print('Weather pressure data tallennettu')
             pressdatafile.close()
-# return pressure_value
+
 
         rowCount = self.tableWidget.rowCount()
         self.tableWidget.insertRow(rowCount)
@@ -117,6 +113,49 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def push_Graph_clicked(self):
+        data_list = []
+        with open("date.txt") as file1:
+            file_reader1 = csv.reader(file1)
+            for row in file_reader1:
+                data_list.append(row[0])
+
+        sys_list = []
+        with open("sys.txt") as file2:
+            file_reader2 = csv.reader(file2)
+            for row in file_reader2:
+                sys_list.append(row[0])
+
+        dia_list = []
+        with open("dia.txt") as file3:
+            file_reader3 = csv.reader(file3)
+            for row in file_reader3:
+                dia_list.append(row[0])
+
+        weahter_list = []
+        with open("weather_pressure.txt") as file4:
+            file_reader4 = csv.reader(file4)
+            for row in file_reader4:
+                weahter_list.append(row[0])
+
+
+        x = data_list
+        y1 = sys_list
+        y2 = dia_list
+        y3 = weahter_list
+
+        plt.title('Blood & Weather pressure')
+        plt.xlabel(xlabel='Date')
+        plt.ylabel(ylabel='Value')
+        plt.plot(x, y1, label='sys', color='red')
+        plt.plot(x, y2, label='dia', color='blue')
+        plt.plot(x, y3, label='weather pressure', color='green')
+        plt.grid()
+        plt.draw()
+        plt.legend(loc='upper left')
+        plt.show()
+
+
+
         # selectedRows = set(index.row() for index in self.tableWidget.selectedIndexes())
 
         # x = []
@@ -143,16 +182,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # plt.show
 
     def push_Settings_clicked(self):
-        pass
+            pass
 
 
 
-
-# def weather_pressure(self):                                     # OpenWeatherMap ilmapainetietoa hakeminen
+# def weather_pressure(self):                                     # OpenWeatherMap ilmapaine tiedot
 owm =pyowm.OWM('f8c43bbd601d39c177afabec2d050d04')
 mgr = owm.weather_manager()
-weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure  # 'weather', not 'observation'
-pressure_value=weather_pressure['press']
+weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure  
+pressure_value=str(weather_pressure['press'])
 
 
 
@@ -162,4 +200,4 @@ if __name__ == "__main__":
     w.show()
     sys.exit(app.exec_())
 
-#  pyuic5 -o pyfilename.py design.ui  # Convert QT Desigenrfile to .py
+# For intern use ##  pyuic5 -o pyfilename.py design.ui  # Convert QT Desigenrfile to .py  ##
