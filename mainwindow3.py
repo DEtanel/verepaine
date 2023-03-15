@@ -9,9 +9,24 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from settings import Ui_Dialog
+from about import Ui_Dialog2
 
 
 class Ui_MainWindow(object):
+    def openWindow(self):
+        self.window = QtWidgets.QDialog()
+        self.ui = Ui_Dialog()
+        self.ui.setupUiDialog(self.window)
+        self.window.show()
+    
+    def openWindow2(self):
+        self.window = QtWidgets.QDialog()
+        self.ui = Ui_Dialog2()
+        self.ui.setupUiDialog2(self.window)
+        self.window.show()
+
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1017, 589)
@@ -62,7 +77,7 @@ class Ui_MainWindow(object):
         self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setGeometry(QtCore.QRect(300, 310, 701, 231))
         self.widget.setObjectName("widget")
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget )   # Button "Setting"
         self.pushButton_3.setGeometry(QtCore.QRect(10, 420, 121, 41))
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
@@ -96,4 +111,4 @@ class Ui_MainWindow(object):
         self.label_6.setText(_translate("MainWindow", "Visual data"))
         self.pushButton_3.setText(_translate("MainWindow", "Settings"))
         self.pushButton_4.setText(_translate("MainWindow", "Quit"))
-        self.pushButton_5.setText(_translate("MainWindow", "Reserved"))
+        self.pushButton_5.setText(_translate("MainWindow", "About"))

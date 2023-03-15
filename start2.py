@@ -1,22 +1,22 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QTableWidgetItem, QMainWindow , QFileDialog, QLCDNumber
-from PyQt5.QtCore import QCoreApplication
-from mainwindow3 import Ui_MainWindow
 import sys
 import csv
 import pyowm
 import matplotlib.pyplot as plt
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QDialog, QApplication, QTableWidgetItem, QMainWindow
+from PyQt5.QtCore import QCoreApplication
+from mainwindow3 import Ui_MainWindow
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
-        self.pushButton.clicked.connect(self.push_Save_clicked)
-        self.pushButton_2.clicked.connect(self.push_Graph_clicked)
-        self.pushButton_3.clicked.connect(self.push_Settings_clicked)    
-        self.pushButton_4.clicked.connect(QCoreApplication.instance().quit)
-
+        self.pushButton.clicked.connect(self.push_Save_clicked)                 # Button "Save"
+        self.pushButton_2.clicked.connect(self.push_Graph_clicked)              # Button "Graph"
+        self.pushButton_3.clicked.connect(self.push_Settings_clicked)           # Button "Settings/Asetukset"
+        self.pushButton_4.clicked.connect(QCoreApplication.instance().quit)     # Button "Quit Application"
+        self.pushButton_5.clicked.connect(self.push_About_clicked) 
       
         # Open files for visual showing in QTableWidget
         with open('date.txt', 'r') as f1, open('sys.txt', 'r') as f2, open('dia.txt', 'r') as f3, open('pulse.txt','r') as f4, open('weather_pressure.txt','r') as f5:
@@ -70,6 +70,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.tableWidget.setItem(row, 4, item5)
 
 
+
     def push_Save_clicked(self):
         sys_value = self.textEdit.text()
         dia_value = self.textEdit_2.text()
@@ -100,6 +101,62 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             pressdatafile.write(str(pressure_value) + '\n')
             print('Weather pressure data tallennettu')
             pressdatafile.close()
+
+        
+        # Array converter for reverse data showing in QTableWidget
+        array = list()
+        with open("date.txt", 'r') as date:
+            for line in date:
+                array.insert(0,line.strip())
+        date.close
+        date_1 = open('date_1.txt','w')
+        for i in range (0, len(array)):
+            date_1.write(array[i]+'\n')
+        date_1.close
+        array.clear()
+
+
+        with open("sys.txt", 'r') as sys:
+            for line in sys:
+                array.insert(0,line.strip())
+        sys.close
+        sys_1 = open('sys_1.txt','w')
+        for i in range (0, len(array)):
+            sys_1.write(array[i]+'\n')
+        sys_1.close
+        array.clear()
+
+
+        with open("dia.txt", 'r') as dia:
+            for line in dia:
+                array.insert(0,line.strip())
+        dia.close
+        dia_1 = open('dia_1.txt','w')
+        for i in range (0, len(array)):
+            dia_1.write(array[i]+'\n')
+        dia_1.close
+        array.clear()
+
+
+        with open("pulse.txt", 'r') as pulse:
+            for line in pulse:
+                array.insert(0,line.strip())
+        pulse.close
+        pulse_1 = open('pulse_1.txt','w')
+        for i in range (0, len(array)):
+            pulse_1.write(array[i]+'\n')
+        pulse_1.close
+        array.clear()
+
+        with open("weather_pressure.txt", 'r') as wpr:
+            for line in wpr:
+                array.insert(0,line.strip())
+        wpr.close
+        wpr_1 = open('weather_pressure_1.txt','w')
+        for i in range (0, len(array)):
+            wpr_1.write(array[i]+'\n')
+        wpr_1.close
+        array.clear()
 
 
         rowCount = self.tableWidget.rowCount()
@@ -155,7 +212,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         plt.show()
 
 
-
         # selectedRows = set(index.row() for index in self.tableWidget.selectedIndexes())
 
         # x = []
@@ -175,14 +231,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # plt.plot(x, y2, label='DIA')
         # plt.plot(x, y3, label='Ilmapaine')
 
-        # plt.xlabel('Data')
-        # plt.ylabel('Value')
-        # plt.title('Plot blood pressure data & weather pressure')
-        # plt.legend
-        # plt.show
 
     def push_Settings_clicked(self):
-            pass
+            self.openWindow()
+            # self.setupUi.lineEdit_city 
+    
+    def push_About_clicked(self):
+            self.openWindow2()
 
 
 
