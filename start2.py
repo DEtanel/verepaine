@@ -1,25 +1,27 @@
-import sys
-import csv
-import pyowm
-import matplotlib.pyplot as plt
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QTableWidgetItem, QMainWindow
+from PyQt5.QtWidgets import QDialog, QApplication, QTableWidgetItem, QMainWindow , QFileDialog
 from PyQt5.QtCore import QCoreApplication
 from mainwindow3 import Ui_MainWindow
+import sys
+import pyowm
+import csv
+import matplotlib.pyplot as plt
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
-        self.pushButton.clicked.connect(self.push_Save_clicked)                 # Button "Save"
-        self.pushButton_2.clicked.connect(self.push_Graph_clicked)              # Button "Graph"
-        self.pushButton_3.clicked.connect(self.push_Settings_clicked)           # Button "Settings/Asetukset"
-        self.pushButton_4.clicked.connect(QCoreApplication.instance().quit)     # Button "Quit Application"
-        self.pushButton_5.clicked.connect(self.push_About_clicked) 
-      
+        self.pushButton.clicked.connect(self.push_Save_clicked)
+        self.pushButton_2.clicked.connect(self.push_Graph_clicked)
+        self.pushButton_3.clicked.connect(self.push_Settings_clicked)    
+        self.pushButton_4.clicked.connect(QCoreApplication.instance().quit)
+
+        self.read_files()
+
+    def read_files(self):
         # Open files for visual showing in QTableWidget
-        with open('date.txt', 'r') as f1, open('sys.txt', 'r') as f2, open('dia.txt', 'r') as f3, open('pulse.txt','r') as f4, open('weather_pressure.txt','r') as f5:
+        with open('date_1.txt', 'r') as f1, open('sys_1.txt', 'r') as f2, open('dia_1.txt', 'r') as f3, open('pulse_1.txt','r') as f4, open('weather_pressure_1.txt','r') as f5:
             data1 = f1.readlines()
             data2 = f2.readlines()
             data3 = f3.readlines()
@@ -72,11 +74,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def push_Save_clicked(self):
+        owm =pyowm.OWM('f8c43bbd601d39c177afabec2d050d04')
+        mgr = owm.weather_manager()
+        weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure
+        pressure_value=str(weather_pressure['press'])
+        
         sys_value = self.textEdit.text()
         dia_value = self.textEdit_2.text()
         pulse_value = self.textEdit_3.text()
         data_value = self.textEdit_4.text() 
     
+
         with open('sys.txt', 'a') as sysfile:
             sysfile.write(str(sys_value) + '\n')
             print('Sys-tieto tallennettu')
@@ -101,8 +109,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             pressdatafile.write(str(pressure_value) + '\n')
             print('Weather pressure data tallennettu')
             pressdatafile.close()
-
         
+        
+        self.save_to_reversed_files()
+        self.read_files()
+
+    def save_to_reversed_files(self):
         # Array converter for reverse data showing in QTableWidget
         array = list()
         with open("date.txt", 'r') as date:
@@ -159,93 +171,89 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         array.clear()
 
 
-        rowCount = self.tableWidget.rowCount()
-        self.tableWidget.insertRow(rowCount)
-        self.tableWidget.setItem(rowCount, 0, QTableWidgetItem(data_value))
-        self.tableWidget.setItem(rowCount, 1, QTableWidgetItem(sys_value))
-        self.tableWidget.setItem(rowCount, 2, QTableWidgetItem(dia_value))
-        self.tableWidget.setItem(rowCount, 3, QTableWidgetItem(pulse_value))
-        self.tableWidget.setItem(rowCount, 4, QTableWidgetItem(pressure_value))
-        
+    def push_Settings_clicked(self):
+        self.openWindow()
+        # self.setupUi.lineEdit_city 
+    
+    def push_About_clicked(self):
+        self.openWindow2()
+
+    def push_Graph_clicked(self): 
+        with open('date.txt', 'r') as file:
+            contents = file.readlines()
+        # Create an empty array to store the data
+        data_arr = []
+        # Loop through each line of the file and append to the array
+        for line in contents:
+            # Remove the newline character from the end of the line
+            line = line.strip()
+            # Append the line to the array
+            data_arr.append(line)
+
+        with open('sys.txt', 'r') as filesys:
+            contents_sys = filesys.readlines()
+        # Create an empty array to store the data
+        sys_arr = []
+        # Loop through each line of the file and append to the array
+        for line1 in contents_sys:
+            # Remove the newline character from the end of the line
+            line1 = line1.strip()
+            # Append the line to the array
+            sys_arr.append(line1)
+
+        with open('dia.txt', 'r') as filedia:
+            contents_dia = filedia.readlines()
+        # Create an empty array to store the data
+        dia_arr = []
+        # Loop through each line of the file and append to the array
+        for line2 in contents_sys:
+            # Remove the newline character from the end of the line
+            line2 = line2.strip()
+            # Append the line to the array
+            dia_arr.append(line2)
+
+        with open('weather_pressure.txt', 'r') as filepress:
+            contents_weather = filepress.readlines()
+        weather_arr = []
+        for line3 in contents_weather:
+            line3 = line3.strip()
+            weather_arr.append(line3)
 
 
-    def push_Graph_clicked(self):
-        data_list = []
-        with open("date.txt") as file1:
-            file_reader1 = csv.reader(file1)
-            for row in file_reader1:
-                data_list.append(row[0])
-
-        sys_list = []
-        with open("sys.txt") as file2:
-            file_reader2 = csv.reader(file2)
-            for row in file_reader2:
-                sys_list.append(row[0])
-
-        dia_list = []
-        with open("dia.txt") as file3:
-            file_reader3 = csv.reader(file3)
-            for row in file_reader3:
-                dia_list.append(row[0])
-
-        weahter_list = []
-        with open("weather_pressure.txt") as file4:
-            file_reader4 = csv.reader(file4)
-            for row in file_reader4:
-                weahter_list.append(row[0])
+        x = data_arr
+        y1 = sys_arr
+        y2 = dia_arr
+        y3 = weather_arr
 
 
-        x = data_list
-        y1 = sys_list
-        y2 = dia_list
-        y3 = weahter_list
+        col1 = 'steelblue '
+        col2 = 'red '
 
-        plt.title('Blood & Weather pressure')
-        plt.xlabel(xlabel='Date')
-        plt.ylabel(ylabel='Value')
-        plt.plot(x, y1, label='sys', color='red')
-        plt.plot(x, y2, label='dia', color='blue')
-        plt.plot(x, y3, label='weather pressure', color='green')
+        #define subplots
+        fig,ax = plt.subplots()
+
+        #add first line to plot
+        ax.plot(x, y1)
+        ax.set_xlabel('Date', fontsize= 14 )
+        ax.set_ylabel('Sys', fontsize= 16 )
+
+        #define second y-axis that shares x-axis with current plot
+        ax2 = ax.twinx ()
+        ax2.plot(x, y2)
+        ax2.set_ylabel('Dia', fontsize= 16 )
+
+
+        plt.title('Blood Pressure & Pulse')
+        #plt.xlabel(xlabel='Date')
+        plt.xticks(rotation=45)
+        #plt.ylabel(ylabel='Value')
+        # plt.plot(x, y1, label='sys', color='red')
+
         plt.grid()
         plt.draw()
         plt.legend(loc='upper left')
         plt.show()
 
-
-        # selectedRows = set(index.row() for index in self.tableWidget.selectedIndexes())
-
-        # x = []
-        # y1 = []
-        # y2 = []
-        # y3 = []
-
-
-        # for row in range(self.tableWidget.rowCount()):
-        #     if row in selectedRows:
-        #         x.append(row)
-        #         y1.append(float(self.tableWidget.item(row, 0).text()))
-        #         y2.append(float(self.tableWidget.item(row, 1).text()))
-        #         y3.append(float(self.tableWidget.item(row, 2).text()))
-        
-        # plt.plot(x, y1, label='SYS')
-        # plt.plot(x, y2, label='DIA')
-        # plt.plot(x, y3, label='Ilmapaine')
-
-
-    def push_Settings_clicked(self):
-            self.openWindow()
-            # self.setupUi.lineEdit_city 
-    
-    def push_About_clicked(self):
-            self.openWindow2()
-
-
-
-# def weather_pressure(self):                                     # OpenWeatherMap ilmapaine tiedot
-owm =pyowm.OWM('f8c43bbd601d39c177afabec2d050d04')
-mgr = owm.weather_manager()
-weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure  
-pressure_value=str(weather_pressure['press'])
 
 
 
@@ -255,4 +263,4 @@ if __name__ == "__main__":
     w.show()
     sys.exit(app.exec_())
 
-# For intern use ##  pyuic5 -o pyfilename.py design.ui  # Convert QT Desigenrfile to .py  ##
+#  pyuic5 -o pyfilename.py design.ui  # Convert QT Desigenrfile to .py
