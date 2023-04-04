@@ -3,7 +3,7 @@ Ohjelma, joka tallentaa tietoa ihmisten verenpaineita ja näyttää sen visuaali
 Ohjelman pääpaine on, että se kerää myös netissä säätietoja, joita näytä verenpaineen yhteydessä kuvassa. 
 Lopputuloksena voimme vertailla verenpaineen ja sään vaikutuksia toisiinsa - sekä ymmärtää onko säällä vaikutuksia ihmisen hyvinvointiin. 
 
-Ohjelmiston kehittämiseen on käytetty Python-ohjelmointikieli, tarvittavat Library-moduulit: CSV, matplotlib, PyQt5, Beautifulsoup
+Ohjelmiston kehittämiseen on käytetty Python-ohjelmointikieli, tarvittavat Library-moduulit: matplotlib, PyQt5
 
 Testausta ja bugien löytämistä varten on käytetty Microsoft Visual Code Studio ja BrainJet PyCharm ohjelmistossa.
 Laajempien tuloksien saantia varten, testausta on suoritettu monilla eri tietokone kokoonpanoilla ja eri ihmisillä.
