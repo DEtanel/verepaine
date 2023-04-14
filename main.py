@@ -85,31 +85,26 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         with open('sys.txt', 'a') as sysfile:
             sysfile.write(str(sys_value) + '\n')
-            print('Sys-tieto tallennettu')
             sysfile.close()
 
         with open('dia.txt', 'a') as diafile:
             diafile.write(str(dia_value) + '\n')
-            print('Dia-tieto tallennettu')
             diafile.close()
 
         with open('pulse.txt', 'a') as pulsefile:
             pulsefile.write(str(pulse_value) + '\n')
-            print('Pulse-tieto tallennettu')
             pulsefile.close()
         
         with open('date.txt', 'a') as datefile:
             datefile.write(str(data_value) + '\n')
-            print('Päivä-tieto tallennettu')
             datefile.close()
         
         with open('weather_pressure.txt', 'a') as pressdatafile:
             pressdatafile.write(str(pressure_value) + '\n')
-            print('Weather pressure data tallennettu')
             pressdatafile.close()
         
-        self.save_to_reversed_files()                                  # call function for reversing values. It´s needed for show it in QTable
-        self.read_files()
+        self.save_to_reversed_files()                                # call function for reversing values. It´s needed for show it in QTable
+        self.read_files()                                            # call function for reading and showing values in table
 
 
     def save_to_reversed_files(self):
@@ -180,7 +175,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Read the integer values from three txt-files
         with open('sys.txt', 'r') as sysfile1:
-            # values1 = [int(val.strip()) for val in file1.readlines()]
             values_sys1 = []
             for valsys1 in sysfile1.readlines():
                 values_sys1.append(int(valsys1.strip()))
@@ -198,11 +192,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # PLOT data and values
         fig = Figure()
         ax = fig.add_subplot(211)
-        # ax.tick_params(axis='x', rotation=45)
-        ax.set_ylabel('Sys & Dia')
-        ax.set_title('Blood & Pressure')
+        ax.set_ylabel('SYS & DIA')
+        ax.set_title('SYS and DIA & Pulse graph')
         ax.grid(linewidth=1)
-        ax.plot(dates, values_sys1, color='r', label='Sys')    # x-axis =Date  y-axis = SYS
+        ax.plot(dates, values_sys1, color='r', label='Sys', marker='*')    # x-axis =Date  y-axis = SYS
         ax.plot(dates, values_dia2, color='g', label='Dia')    # x-axis =Date  y-axis = Dia
  
         ax = fig.add_subplot(212)
@@ -227,8 +220,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Parse the date strings into datetime objects
         dates = []
         for date_str in date_strs:
-            date_str = date_str.strip()  # remove any whitespace or newline characters
-            date = datetime.strptime(date_str, '%d.%m.%Y') # replace with your format
+            date_str = date_str.strip()                     # remove any whitespace or newline characters
+            date = datetime.strptime(date_str, '%d.%m.%Y')  # replace with your format
             dates.append(date)
 
         # Read the integer values from two txt-files
@@ -249,21 +242,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         ax.tick_params(axis='x', rotation=45)
         ax.set_xlabel('Date')
         ax.set_ylabel('Sys')
-        ax.set_title('Blood & Pressure')
-        ax.plot(dates, values1, color='r', label='Sys')    # x-axis =Date  y-axis = SYS
-        ax2 = ax.twinx()    #define second y-axis that shares x-axis with current plot                 
-        ax2.plot(dates, values2, color='g', label='weather')     # x-axis =Date  y-axis = Weather pressure data
+        ax.set_title('SYS & Weather pressure')
+        ax.plot(dates, values1, color='r', label='Sys')         # x-axis =Date  y-axis = SYS
+        ax.legend(loc='upper left',labelcolor='red')
+        ax2 = ax.twinx()                                        #define second y-axis that shares x-axis with current plot                 
+        ax2.plot(dates, values2, color='g', label='weather')    # x-axis =Date  y-axis = Weather pressure data
+        ax2.legend(loc='upper right',labelcolor='green')
         ax2.set_ylabel('Weather pressure')
         canvas = FigureCanvas(fig)
         self.plot_window = QWidget()
         layout = QVBoxLayout(self.plot_window)
         layout.addWidget(canvas)
-        
         self.plot_window.show()
 
 
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    w = MainWindow()
-    w.show()
-    sys.exit(app.exec_())
+if __name__ == "__main__":                      
+    app = QtWidgets.QApplication(sys.argv)      # creating a PyQT5 application
+    w = MainWindow()                            # creating a window object
+    w.show()                                    # showing the window
+    sys.exit(app.exec_())                       # loop
