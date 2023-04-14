@@ -76,15 +76,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         mgr = owm.weather_manager()
         weather_pressure = mgr.weather_at_place('Helsinki').weather.pressure
         pressure_value=str(weather_pressure['press'])
-        
-        sys_value = self.lineEdit.text()
+        # Read value from GUI SYS,DIA,Pulse, Data - fields
+        sys_value = self.lineEdit.text()                    
         dia_value = self.lineEdit_2.text()
         pulse_value = self.lineEdit_3.text()
         data_value = self.dateEdit.text() 
     
 
-        with open('sys.txt', 'a') as sysfile:
-            sysfile.write(str(sys_value) + '\n')
+        with open('sys.txt', 'a') as sysfile:               # open the file in write-only mode. If the file already exists, it remains intact and the content is appended at the end.     
+            sysfile.write(str(sys_value) + '\n')            #  \n  - next line
             sysfile.close()
 
         with open('dia.txt', 'a') as diafile:
